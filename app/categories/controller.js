@@ -43,7 +43,7 @@ async function destroy(req,res,next) {
     try {
         let deleted = await Category.findOneAndDelete({_id: req.params.id});
 
-        return res.response(deleted);
+        return res.json(deleted);
     } catch (error) {
         if(error && error.name === 'ValidationError'){
             return res.json({
