@@ -8,6 +8,7 @@ const productRouter = require('./app/products/router');
 const categoriesRouter = require('./app/categories/router');
 const tagRouter = require('./app/tag/router');
 const authRouter = require('./app/auth/router');
+const wilayahRouter = require('./app/wilayah/router');
 const { decodeToken } = require('./app/auth/middleware');
 var app = express();
 
@@ -27,6 +28,7 @@ app.use('/auth', authRouter);
 app.use('/api',productRouter);
 app.use('/api',categoriesRouter);
 app.use('/api', tagRouter);
+app.use('/api', wilayahRouter);
 
 
 // catch 404 and forward to error handler
