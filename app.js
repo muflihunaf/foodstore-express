@@ -7,6 +7,8 @@ var logger = require('morgan');
 const productRouter = require('./app/products/router');
 const categoriesRouter = require('./app/categories/router');
 const tagRouter = require('./app/tag/router');
+const authRouter = require('./app/auth/router');
+const { decodeToken } = require('./app/auth/middleware');
 var app = express();
 
 // view engine setup
@@ -19,9 +21,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(decodeToken());
+
+app.use('/auth', authRouter);
 app.use('/api',productRouter);
 app.use('/api',categoriesRouter);
-app.use('api', tagRouter);
+app.use('/api', tagRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

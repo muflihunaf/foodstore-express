@@ -4,10 +4,20 @@ const Product = require('./model');
 const config = require('../config');
 const Category = require('../categories/model');
 const Tag = require('../tag/model');
+const {policyFor} = require('../policy');
 
 async function store(req,res,next){
     try {
         let payload = req.body;
+
+        // cek policy
+        let policy = policyFor(req.user);
+        if(!policy.can('create', 'Product')){
+          return res.json({
+            error: 1,
+            message: `Anda tidak memiliki akses untuk membuat produk`
+          });
+        }
 
         if(payload.category){
             let category = await Category.findOne({name: {$regex: payload.category, $options: 'i'}});
@@ -105,8 +115,9 @@ async function index(req,res,next){
                             .skip(parseInt(skip))
                             .populate('category')
                             .populate('tags');
+        let count = await Product.find(criteria).countDocuments();
 
-        return res.json(products);   
+        return res.json({data: products, count});   
     } catch (error) {
         next(error);
     }
@@ -115,6 +126,15 @@ async function index(req,res,next){
 async function update(req,res,next){
     try {
         let payload = req.body;
+
+        
+        let policy = policyFor(req.user);
+        if(!policy.can('update', 'Product')){
+          return res.json({
+            error: 1,
+            message: `Anda tidak memiliki akses untuk merubah produk`
+          });
+        }
 
         if(payload.category){
             let category = await Category.findOne({$name: {$regex: payload.category, $options: 'i'}});
@@ -192,6 +212,14 @@ async function update(req,res,next){
 
 async function destroy(req,res,next){
     try {
+
+      let policy = policyFor(req.user);
+      if(!policy.can('delete', 'Product')){
+        return res.json({
+          error: 1,
+          message: `Anda tidak memiliki akses untuk menghapus produk`
+        });
+      }
         let product = await Product.findOneAndDelete({_id: req.params.id});
         let currentImage = `${config.rootPath}/public/upload/${product.image_url}`;
 
