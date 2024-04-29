@@ -45,7 +45,7 @@ async function store(req,res,next) {
     let orderItems = await OrderItem.insertMany(
       items.map(item => ({
         ...item,
-        name: item.productName,
+        name: item.product.name,
         qty: parseInt(item.qty),
         price: parseInt(item.product.price),
         order: order._id,
