@@ -4,9 +4,9 @@ const multer = require('multer');
 
 const addressController = require('./controller');
 
-router.post('/delivery-address', multer().none(), addressController.store);
-router.put('/delivery-address/:id', multer().none(), addressController.update);
+router.post('/delivery-addresses', multer().none(), addressController.store);
+router.put('/delivery-addresses/:id', multer().none(), addressController.update);
 router.delete('/delivery-address/:id', addressController.destroy);
-router.get('/delivery-address', addressController.index);
+router.get('/delivery-addresses', addressController.index);
 
 module.exports = router;

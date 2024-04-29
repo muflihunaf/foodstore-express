@@ -105,7 +105,10 @@ async function index(req,res,next) {
     let { limit = 10, skip = 0 } = req.query;
     const count = await DeliveryAddress.find({user: req.user._id}).countDocuments();
 
-    const deliveryAddress = await new DeliveryAddress.find({user: req.user._id}).limit(parseInt(limit)).skip(parseInt(skip)).sort('-createdAt');
+    const deliveryAddress = await DeliveryAddress.find({user: req.user._id})
+    .limit(parseInt(limit))
+    .skip(parseInt(skip))
+    .sort('-createdAt');
 
     return res.json({data: deliveryAddress, count: count});
   } catch (err) {
@@ -119,6 +122,7 @@ async function index(req,res,next) {
     next(err);
   }
 }
+
 
 
 module.exports = {
