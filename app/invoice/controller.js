@@ -18,6 +18,8 @@ async function show(req,res,next){
         message: 'Anda tidak memiliki akses untuk melihat invoice ini'
       });
     }
+    return res.json(invoice);
+
   } catch (err) {
     return res.json({
       error: 1,

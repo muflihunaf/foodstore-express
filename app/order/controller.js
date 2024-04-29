@@ -87,9 +87,10 @@ async function index(req,res,next){
     let count = await Order.find({user: req.user._id}).countDocuments();
     let orders = await Order.find({user: req.user._id})
                        .limit(parseInt(limit))
-                       .skip(parseInt(limit))
+                       .skip(parseInt(skip))
                        .populate('order_items')
                        .sort('-createdAt');
+
     return res.json({
       data: orders.map(order => order.toJSON({virtuals: true})),
       count
