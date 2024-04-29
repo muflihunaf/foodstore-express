@@ -19,15 +19,15 @@ async function store(req,res,next){
           });
         }
 
-        if(payload.category){
-            let category = await Category.findOne({name: {$regex: payload.category, $options: 'i'}});
+        // if(payload.category){
+        //     let category = await Category.findOne({name: {$regex: payload.category, $options: 'i'}});
 
-            if(category){
-                payload = {...payload, category: category._id}
-            }else{
-                delete payload.category;
-            }
-        }
+        //     if(category){
+        //         payload = {...payload, category: category._id}
+        //     }else{
+        //         delete payload.category;
+        //     }
+        // }
 
         if(payload.tags && payload.tags.length){
             let tags = await Tag.find({name: {$in: payload.tags}});
@@ -88,7 +88,7 @@ async function store(req,res,next){
 
 async function index(req,res,next){
     try {
-        let {limit = 10, skip = 0, q = '', category = ''} = req.query;
+        let {limit = 10, skip = 0, q = '', category = '', tags=[]} = req.query;
 
         let criteria = {};
 
@@ -100,13 +100,17 @@ async function index(req,res,next){
         }
 
         if(category.length){
-            category = await category.findOne({name: {$regex: `${category}`}, $options: 'i'});
+            category = await Category.findOne({name: {$regex: `${category}`, $options: 'i'}});
             if(category){
                 criteria = {
                     ...criteria,
                     category: category._id
                 }
             }
+        }
+        if(tags.length){
+          tags = await Tag.find({name: {$in: tags}});
+          criteria = {...criteria, tags: {$in: tags.map(tag => tag._id)} }
         }
 
         let products = await Product
