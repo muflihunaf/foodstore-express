@@ -13,7 +13,7 @@ module.exports = {
     dbPort: process.env.DB_PORT,
     secretKey: process.env.SECRET_KEY,
     midtrans: {
-      isProduction: process.env.MIDTRANS_IS_PRODUCTION,
+      isProduction: process.env.MIDTRANS_IS_PRODUCTION === 'false' ? false : true,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
       clientKey: process.env.MIDTRANS_CLIENT_KEY
     }

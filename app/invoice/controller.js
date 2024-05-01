@@ -3,10 +3,10 @@ const Invoice = require('./model');
 const { policyFor } = require('../policy');
 const midtransClient = require('midtrans-client');
 const Order = require('../order/model');
+const config = require('../config');
 let snap = new midtransClient.Snap({
   isProduction: config.midtrans.isProduction,
   serverKey: config.midtrans.serverKey,
-    clientKey: config.midtrans.clientKey
 });
 async function show(req,res,next){
   try {
@@ -61,6 +61,7 @@ async function initiatePayment(req,res){
     let response = await snap.createTransaction(parameter);
     return res.json(response);
   } catch (err) {
+    console.log(err);
     return res.json({
       error: 1,
       message: 'Something when wrong'
@@ -94,6 +95,7 @@ async function handleMidtransNotification(){
       return res.json('ok');
     }
   } catch (err) {
+    console.log(err);
     return res.status(500).json('Something went wrong');
   }
 }
